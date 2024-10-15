@@ -1,0 +1,21 @@
+spring:
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  error:
+    include-message: always # on-param
+    include-stacktrace: on_param
+
+asterisk:
+  host: ${ASTERISK_HOST:localhost}
+  files: ${ASTERISK_FILES:/asterisk}
+  ami:
+    username: ${ASTERISK_AMI_USERNAME:vip-api}
+    password: ${ASTERISK_AMI_PASSWORD:jefao123}
+    port: ${ASTERISK_AMI_PORT:5038}
+
+audios:
+  records: /asterisk-audios/records
+  mohs: /asterisk-audios/mohs
