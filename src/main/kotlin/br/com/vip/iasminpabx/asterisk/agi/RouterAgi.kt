@@ -1,26 +1,27 @@
 package br.com.vip.iasminpabx.asterisk.agi
 
+import br.com.vip.iasminpabx.asterisk.agi.actions.DialPeerService
+import br.com.vip.iasminpabx.asterisk.agi.actions.DialRouteService
 import org.asteriskjava.fastagi.AgiChannel
 import org.asteriskjava.fastagi.AgiRequest
 import org.asteriskjava.fastagi.BaseAgiScript
 import org.springframework.stereotype.Service
 
 @Service
-class RouterAgi(): BaseAgiScript() {
+class RouterAgi(
+    private val dialRouteService: DialRouteService,
+    private val dialPeerService: DialPeerService
+): BaseAgiScript() {
 
     override fun service(request: AgiRequest, channel: AgiChannel) {
         val callType = request.getParameter("callType")?: return
-        val companyId = request.getParameter("companyId")?: return
-        val peer = request.getParameter("peer")?: return
+        val controlNumber = request.getParameter("companyId")?: return
 
-        channel.verbose("callType: $callType, companyId: $companyId", 1)
+        if (request.extension.length > 7){
+            dialRouteService.dialTrunk(channel, request.extension, controlNumber)
+            return
+        }
+        dialPeerService.dialPeer(channel, "careca", controlNumber, 60, "T")
     }
-    /*
-         discar agente
-         0800 pre pago
-         retorno imediato fila
-         retorno imediato ura
-         pesquisa de satisfação
-     */
 
 }

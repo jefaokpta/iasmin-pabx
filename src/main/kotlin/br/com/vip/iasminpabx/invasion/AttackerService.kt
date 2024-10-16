@@ -61,8 +61,7 @@ class AttackerService(
         if (attacker.attempts > 5) {
             if (!blockedCache.has(attacker.ip) && LocalDateTime.now().isBefore(attacker.timestamp.plusMinutes(1))) {
                 blockedCache.add(attacker).run { log.info("\uD83D\uDEAB Bloqueando $attacker") }
-            } else{
-                attackerCache.remove(attacker.ip)            }
+            } else attackerCache.remove(attacker.ip)
             return
         }
         attackerCache.add(attacker)

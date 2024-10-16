@@ -16,6 +16,10 @@ asterisk:
     password: ${ASTERISK_AMI_PASSWORD:jefao123}
     port: ${ASTERISK_AMI_PORT:5038}
 
+pabx:
+  trunk: ${PABX_TRUNK}
+  tech-prefix: ${PABX_TECH_PREFIX}
+
 audios:
   records: /asterisk-audios/records
   mohs: /asterisk-audios/mohs
