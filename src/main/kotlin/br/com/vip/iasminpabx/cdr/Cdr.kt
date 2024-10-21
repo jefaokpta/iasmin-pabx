@@ -31,7 +31,7 @@ data class Cdr(
     val dstFinal: String,
     val callRecords: List<String>
 ) {
-    constructor(cdrEvent: CdrEvent, callRecords: List<String> ): this(
+    constructor(cdrEvent: CdrEvent ): this(
         peer = cdrEvent.dynamicProperties["peer"] ?: "",
         startTimeAsDate = cdrEvent.startTimeAsDate,
         channel = cdrEvent.channel,
@@ -53,7 +53,7 @@ data class Cdr(
         accountCode = cdrEvent.accountCode,
         company = cdrEvent.dynamicProperties["company"]?.toInt() ?: 0,
         dstFinal = cdrEvent.dynamicProperties["dstfinal"] ?: "",
-        callRecords = callRecords
+        callRecords = cdrEvent.dynamicProperties["callrecords"]?.split(",") ?: emptyList()
     )
 
 }

@@ -1,6 +1,8 @@
 package br.com.vip.iasminpabx.asterisk.agi.actions
 
+import br.com.vip.iasminpabx.record.RecordService
 import org.asteriskjava.fastagi.AgiChannel
+import org.asteriskjava.fastagi.AgiRequest
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Service
  */
 
 @Service
-class DialRouteService() {
+class DialRouteService(private val recordService: RecordService) {
 
     @Value("\${pabx.trunk}")
     private lateinit var trunk: String
@@ -18,9 +20,12 @@ class DialRouteService() {
     @Value("\${pabx.tech-prefix}")
     private lateinit var techPrefix: String
 
-    fun dialTrunk(channel: AgiChannel, destination: String, controlNumber: String) {
+    fun dialTrunk(channel: AgiChannel, request: AgiRequest, destination: String, controlNumber: String) {
+        val fileName = recordService.recordCall(channel, request)
+        channel.setVariable("CDR(callrecords)", fileName.plus(","))
         val tecnology = "PJSIP"
-        channel.dial("$tecnology/$techPrefix$destination@$trunk", 60, "Tb(PRE_DIAL_ACTIONS^sipheader^1($controlNumber))")
+        channel.dial("$tecnology/$techPrefix$destination@$trunk", 60,
+            "Tb(PRE_DIAL_ACTIONS_GS^add_sip_header^1($controlNumber))")
         channel.verbose("${channel.name} >>> DIALSTATUS - ${channel.getVariable("DIALSTATUS")}", 0)
     }
 

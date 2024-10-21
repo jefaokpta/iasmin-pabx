@@ -1,6 +1,7 @@
 package br.com.vip.iasminpabx.asterisk.ami
 
 
+import br.com.vip.iasminpabx.cdr.Cdr
 import br.com.vip.iasminpabx.invasion.Attacker
 import br.com.vip.iasminpabx.invasion.AttackerService
 import org.asteriskjava.manager.ManagerConnection
@@ -66,7 +67,7 @@ class AmiCache(
             is InvalidAccountId -> attackerService.attackReport(Attacker(event))
 //            is DialEvent -> recordCall.recordCall(event, this)
 //            is HangupEvent -> hangupService.hangup(event)
-//            is CdrEvent -> cdrService.processCdr(event)
+            is CdrEvent -> println(Cdr(event))
 //            is BridgeEnterEvent -> bridgeService.add(event)
 //            is BridgeLeaveEvent -> bridgeService.remove(event.channel)
 //            is BridgeEvent -> bridgeService.recordCall(event, this)

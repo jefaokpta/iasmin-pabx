@@ -18,7 +18,7 @@ class RouterAgi(
         val controlNumber = request.getParameter("companyId")?: return
 
         if (request.extension.length > 7){
-            dialRouteService.dialTrunk(channel, request.extension, controlNumber)
+            dialRouteService.dialTrunk(channel, request, request.extension, controlNumber)
             return
         }
         dialPeerService.dialPeer(channel, "careca", controlNumber, 60, "T")
