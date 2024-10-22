@@ -25,7 +25,8 @@ class DialRouteService(private val recordService: RecordService) {
         channel.setVariable("CDR(callrecords)", fileName.plus(","))
         val tecnology = "PJSIP"
         channel.dial("$tecnology/$techPrefix$destination@$trunk", 60,
-            "Tb(PRE_DIAL_ACTIONS_GS^add_sip_header^1($controlNumber))")
+            "Tb(PRE_DIAL_ACTIONS_GS^s^1($controlNumber))" +
+                    "U(CALL_RECORDING_GS^$fileName))")
         channel.verbose("${channel.name} >>> DIALSTATUS - ${channel.getVariable("DIALSTATUS")}", 0)
     }
 

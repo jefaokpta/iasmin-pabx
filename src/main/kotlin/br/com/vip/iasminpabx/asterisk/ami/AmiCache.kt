@@ -20,7 +20,8 @@ import org.springframework.stereotype.Component
  */
 @Component
 class AmiCache(
-    private val attackerService: AttackerService
+    private val attackerService: AttackerService,
+    private val hangupService: HangupService
 ): ManagerEventListener {
 
     @Value("\${asterisk.host}")
@@ -66,7 +67,7 @@ class AmiCache(
         when(event) {
             is InvalidAccountId -> attackerService.attackReport(Attacker(event))
 //            is DialEvent -> recordCall.recordCall(event, this)
-//            is HangupEvent -> hangupService.hangup(event)
+            is HangupEvent -> hangupService.hangup(event)
             is CdrEvent -> println(Cdr(event))
 //            is BridgeEnterEvent -> bridgeService.add(event)
 //            is BridgeLeaveEvent -> bridgeService.remove(event.channel)
