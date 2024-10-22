@@ -20,6 +20,7 @@ class RecordConvertService {
     fun convertToMp3(uniqueId: String) {
         findRecordFiles(uniqueId).forEach {
             executeFfmpegCommand(it)
+            deleteWavFile(it)
         }
     }
 
@@ -37,7 +38,6 @@ class RecordConvertService {
             "$RECORD_FOLDER/mp3s/${file.replace(".wav", ".mp3")}")
             .start()
             .waitFor()
-        deleteWavFile(file)
     }
 
     private fun deleteWavFile(file: String){
