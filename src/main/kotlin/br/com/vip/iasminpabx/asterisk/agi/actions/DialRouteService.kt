@@ -22,7 +22,7 @@ class DialRouteService(private val recordService: RecordService) {
 
     fun dialTrunk(channel: AgiChannel, request: AgiRequest, destination: String, controlNumber: String) {
         val fileName = recordService.recordCall(channel, request)
-        channel.setVariable("CDR(callrecords)", fileName.plus(","))
+        channel.setVariable("CDR(callrecord)", fileName)
         val tecnology = "PJSIP"
         channel.dial("$tecnology/$techPrefix$destination@$trunk", 60,
             "Tb(PRE_DIAL_ACTIONS_GS^s^1($controlNumber))" +
