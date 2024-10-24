@@ -1,7 +1,7 @@
 package br.com.vip.iasminpabx.asterisk.ami
 
 
-import br.com.vip.iasminpabx.cdr.Cdr
+import br.com.vip.iasminpabx.cdr.CdrService
 import br.com.vip.iasminpabx.invasion.Attacker
 import br.com.vip.iasminpabx.invasion.AttackerService
 import org.asteriskjava.manager.ManagerConnection
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component
 @Component
 class AmiCache(
     private val attackerService: AttackerService,
-    private val hangupService: HangupService
+    private val cdrService: CdrService
 ): ManagerEventListener {
 
     @Value("\${asterisk.host}")
@@ -66,12 +66,7 @@ class AmiCache(
 //        println(event)
         when(event) {
             is InvalidAccountId -> attackerService.attackReport(Attacker(event))
-//            is DialEvent -> recordCall.recordCall(event, this)
-            is HangupEvent -> hangupService.hangup(event)
-            is CdrEvent -> println(Cdr(event))
-//            is BridgeEnterEvent -> bridgeService.add(event)
-//            is BridgeLeaveEvent -> bridgeService.remove(event.channel)
-//            is BridgeEvent -> bridgeService.recordCall(event, this)
+            is CdrEvent -> cdrService.saveCdr(event)
         }
         /**
         if (event is VarSetEvent) return // nova feature ok

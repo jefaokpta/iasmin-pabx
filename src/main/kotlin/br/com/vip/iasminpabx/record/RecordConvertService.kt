@@ -1,5 +1,6 @@
 package br.com.vip.iasminpabx.record
 
+import br.com.vip.iasminpabx.cdr.Cdr
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -17,17 +18,18 @@ class RecordConvertService {
     @Value("\${audios.records}")
     private lateinit var RECORD_FOLDER: String
 
-    fun convertToMp3(uniqueId: String) {
-        findRecordFiles(uniqueId).forEach {
+    fun convertToMp3(cdr: Cdr) {
+        val callRecord = cdr.callRecord ?: return
+        findRecordFiles(callRecord).forEach {
             executeFfmpegCommand(it)
             deleteWavFile(it)
         }
     }
 
-    private fun findRecordFiles(uniqueId: String): List<String> {
+    private fun findRecordFiles(callRecord: String): List<String> {
         val folder = File(RECORD_FOLDER)
         return folder.walk()
-            .filter { it.isFile && it.extension == "wav" && it.name.contains(uniqueId.replace(".", "-")) }
+            .filter { it.isFile && it.name.contains(callRecord) }
             .map { it.path.substringAfterLast("/") }
             .toList()
     }

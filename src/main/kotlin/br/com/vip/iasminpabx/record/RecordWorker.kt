@@ -1,5 +1,7 @@
 package br.com.vip.iasminpabx.record
 
+import br.com.vip.iasminpabx.cdr.Cdr
+import br.com.vip.iasminpabx.http.IasminClientService
 import org.springframework.stereotype.Service
 import java.util.concurrent.Executors
 
@@ -8,13 +10,17 @@ import java.util.concurrent.Executors
  * Date: 10/22/24
  */
 @Service
-class RecordWorker(private val recordConvertService: RecordConvertService) {
+class RecordWorker(
+    private val recordConvertService: RecordConvertService,
+    private val iasminClientService: IasminClientService
+) {
 
     private val recordVirtualWorker = Executors.newSingleThreadExecutor(Thread.ofVirtual().factory())
 
-    fun addWork(uniqueId: String){
-        recordVirtualWorker.submit { //todo: teste quebrar VT e ver se ela continua recebendo trabalhos
-            recordConvertService.convertToMp3(uniqueId)
+    fun addWork(cdr: Cdr){
+        recordVirtualWorker.submit {
+            recordConvertService.convertToMp3(cdr)
+            iasminClientService.sendRecordToBackend(cdr)
         }
     }
 }
