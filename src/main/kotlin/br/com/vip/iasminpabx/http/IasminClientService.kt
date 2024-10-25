@@ -19,8 +19,8 @@ import java.time.Duration
 @Service
 class IasminClientService {
 
-    @Value("\${backend.url}")
-    private lateinit var BACKEND_URL: String
+    @Value("\${iasmin.url}")
+    private lateinit var IASMIN_BACKEND_URL: String
 
     private val log = LoggerFactory.getLogger(this::class.java)
     private val CONTENT_TYPE = "Content-Type"
@@ -29,7 +29,7 @@ class IasminClientService {
     private val HTTP_CONNECTION_TIMEOUT = 4L
 
     fun sendRecordToBackend(cdr: Cdr){
-        val request = HttpRequest.newBuilder(URI("${BACKEND_URL}/cdr"))
+        val request = HttpRequest.newBuilder(URI("${IASMIN_BACKEND_URL}/cdr"))
             .POST(HttpRequest.BodyPublishers.ofString(jacksonObjectMapper().writeValueAsString(cdr)))
             .header(CONTENT_TYPE, JSON_HEADER)
             .timeout(Duration.ofSeconds(HTTP_REQUEST_TIMEOUT))
